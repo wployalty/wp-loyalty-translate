@@ -45,8 +45,7 @@ if ( ! function_exists( 'isWployaltyActiveOrNot' ) ) {
 if ( ! isWoocommerceActive() || ! isWployaltyActiveOrNot() ) {
 	return;
 }
-defined( 'WLT_PLUGIN_NAME' ) or define( 'WLT_PLUGIN_NAME',
-	__( 'WPLoyalty - Multi-Lingual Compatibility - Dynamic Strings', 'wp-loyalty-translate' ) );
+defined( 'WLT_PLUGIN_NAME' ) or define( 'WLT_PLUGIN_NAME', 'WPLoyalty - Multi-Lingual Compatibility - Dynamic Strings' );
 defined( 'WLT_PLUGIN_VERSION' ) or define( 'WLT_PLUGIN_VERSION', '1.0.5' );
 defined( 'WLT_PLUGIN_SLUG' ) or define( 'WLT_PLUGIN_SLUG', 'wp-loyalty-translate' );
 defined( 'WLT_PLUGIN_URL' ) or define( 'WLT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
