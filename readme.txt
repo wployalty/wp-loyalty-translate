@@ -5,7 +5,7 @@ Tags: points, rewards, loyalty, woocommerce points and rewards, points and rewar
 Requires at least: 6.0
 Tested up to: 6.6
 WC requires at least: 6.5.0
-WC tested up to: 10.3
+WC tested up to: 10.4
 Stable tag: 1.0.6
 Requires PHP: 7.0
 License: GPLv2 or later
