@@ -12,9 +12,8 @@
  * WC requires at least: 6.5
  * WC tested up to: 10.4
  * Contributors: Alagesan
- * Author URI: https://wployalty.net/
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * License: GPL v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * WPLoyalty: 1.4.3
  * WPLoyalty Page Link: wp-loyalty-translate
  */

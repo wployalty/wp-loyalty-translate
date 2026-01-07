@@ -1,9 +1,8 @@
 === WPLoyalty - Multi-Lingual Compatibility - Dynamic Strings ===
 Contributors: wployalty
-Donate link: https://wployalty.net
-Tags: points, rewards, loyalty, woocommerce points and rewards, points and rewards, woocommerce loyalty, woocommerce rewards, woocommerce reward program, woocommerce loyalty program, reward system
+Tags: wployalty, multi-lingual, translation, dynamic strings
 Requires at least: 6.0
-Tested up to: 6.6
+Tested up to: 6.9
 WC requires at least: 6.5.0
 WC tested up to: 10.4
 Stable tag: 1.0.6
