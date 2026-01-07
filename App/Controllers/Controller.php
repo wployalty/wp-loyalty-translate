@@ -10,15 +10,15 @@ use Wlt\App\Models\Levels;
 use Wlt\App\Models\Rewards;
 
 class Controller {
-	protected static $active_plugin_list = array();
+	protected static $active_plugin_list = [];
 
 	function adminMenu() {
 		if ( Woocommerce::hasAdminPrivilege() ) {
 			add_menu_page( __( 'WPLoyalty: Translate', 'wp-loyalty-translate' ),
-				__( 'WPLoyalty: Translate', 'wp-loyalty-translate' ), 'manage_woocommerce', WLT_PLUGIN_SLUG, array(
+				__( 'WPLoyalty: Translate', 'wp-loyalty-translate' ), 'manage_woocommerce', WLT_PLUGIN_SLUG, [
 					$this,
 					'addMenu'
-				), 'dashicons-megaphone', 57 );
+				], 'dashicons-megaphone', 57 );
 		}
 	}
 
@@ -44,37 +44,37 @@ class Controller {
 			return;
 		}
 		$this->removeAdminNotice();
-		wp_register_style( WLT_PLUGIN_SLUG . '-wlt-style', WLT_PLUGIN_URL . 'Assets/Css/wlt_admin.css', array(),
+		wp_register_style( WLT_PLUGIN_SLUG . '-wlt-style', WLT_PLUGIN_URL . 'Assets/Css/wlt_admin.css', [],
 			WLT_PLUGIN_VERSION . '&t=' . time() );
 		wp_enqueue_style( WLT_PLUGIN_SLUG . '-wlt-style' );
-		wp_register_style( WLT_PLUGIN_SLUG . '-wlr-toast', WLT_PLUGIN_URL . 'Assets/Css/wlr-toast.css', array(),
+		wp_register_style( WLT_PLUGIN_SLUG . '-wlr-toast', WLT_PLUGIN_URL . 'Assets/Css/wlr-toast.css', [],
 			WLT_PLUGIN_VERSION . '&t=' . time() );
 		wp_enqueue_style( WLT_PLUGIN_SLUG . '-wlr-toast' );
 		wp_register_script( WLT_PLUGIN_SLUG . '-wlr-toast', WLT_PLUGIN_URL . 'Assets/Js/wlr-toast.js',
-			array( 'jquery' ), WLT_PLUGIN_VERSION . '&t=' . time() );
+			[ 'jquery' ], WLT_PLUGIN_VERSION . '&t=' . time(), true );
 		wp_enqueue_script( WLT_PLUGIN_SLUG . '-wlr-toast' );
 		wp_register_script( WLT_PLUGIN_SLUG . '-wlt-admin', WLT_PLUGIN_URL . 'Assets/Js/wlt_admin.js',
-			array( 'jquery' ), WLT_PLUGIN_VERSION . '&t=' . time() );
+			[ 'jquery' ], WLT_PLUGIN_VERSION . '&t=' . time(), true );
 		wp_enqueue_script( WLT_PLUGIN_SLUG . '-wlt-admin' );
-		$localize = array(
+		$localize = [
 			'admin_url'    => admin_url(),
 			'common_nonce' => Woocommerce::create_nonce( 'wlt_common_nonce' ),
 			'ajax_url'     => admin_url( 'admin-ajax.php' ),
-		);
+		];
 		wp_localize_script( WLT_PLUGIN_SLUG . '-wlt-admin', 'wlt_localize_data', $localize );
 	}
 
 	function addMenu() {
 		if ( ! Woocommerce::hasAdminPrivilege() ) {
-			wp_die( __( "Don't have access permission", 'wp-loyalty-translate' ) );
+			wp_die( esc_html__( "Don't have access permission", 'wp-loyalty-translate' ) );
 		}
 		if ( Input::get( 'page', null ) != WLT_PLUGIN_SLUG ) {
-			wp_die( __( 'Unable to process', 'wp-loyalty-translate' ) );
+			wp_die( esc_html__( 'Unable to process', 'wp-loyalty-translate' ) );
 		}
 		if ( class_exists( Util::class ) ) {
-			$data = array(
+			$data = [
 				'is_wpml_translate_string_available' => $this->isPluginIsActive( 'wpml-string-translation/plugin.php' )
-			);
+			];
 			$path = WLT_PLUGIN_PATH . 'App/Views/main.php';
 			Util::renderTemplate( $path, $data );
 		}
@@ -107,33 +107,33 @@ class Controller {
 		if ( class_exists( 'Wlt\App\Models\EarnCampaign' ) ) {
 			$campaign_model          = new EarnCampaign();
 			$campaign_list           = $campaign_model->getAll( '*' );
-			$campaign_allowed_string = array(
+			$campaign_allowed_string = [
 				'name',
 				'description'
-			);
+			];
 			foreach ( $campaign_list as $campaign ) {
 				if ( ! is_object( $campaign ) || ! isset( $campaign->action_type ) ) {
 					continue;
 				}
 				$this->getBasicTranslation( $campaign, $campaign_allowed_string, $new_custom_strings );
-				$campaign_strings = array();
+				$campaign_strings = [];
 				switch ( $campaign->action_type ) {
 					case 'point_for_purchase':
-						$campaign_strings = array( 'variable_product_message', 'single_product_message' );
+						$campaign_strings = [ 'variable_product_message', 'single_product_message' ];
 						break;
 					case 'signup':
-						$campaign_strings = array( 'signup_message' );
+						$campaign_strings = [ 'signup_message' ];
 						break;
 					case 'product_review':
-						$campaign_strings = array( 'review_message' );
+						$campaign_strings = [ 'review_message' ];
 						break;
 					case 'facebook_share':
 					case 'twitter_share':
 					case 'whatsapp_share':
-						$campaign_strings = array( 'share_message' );
+						$campaign_strings = [ 'share_message' ];
 						break;
 					case 'email_share':
-						$campaign_strings = array( 'share_body', 'share_subject' );
+						$campaign_strings = [ 'share_body', 'share_subject' ];
 						break;
 				}
 				if ( ! empty( $campaign_strings ) ) {
@@ -147,11 +147,11 @@ class Controller {
 		if ( class_exists( '\Wlt\App\Models\Rewards' ) ) {
 			$reward_model   = new Rewards();
 			$reward_list    = $reward_model->getAll( '*' );
-			$allowed_string = array(
+			$allowed_string = [
 				'name',
 				'description',
 				'display_name'
-			);
+			];
 			foreach ( $reward_list as $reward ) {
 				if ( ! is_object( $reward ) || ! isset( $reward->action_type ) ) {
 					continue;
@@ -166,10 +166,10 @@ class Controller {
 		if ( class_exists( '\Wlt\App\Models\Levels' ) ) {
 			$level_model    = new Levels();
 			$levels         = $level_model->getAll( '*' );
-			$allowed_string = array(
+			$allowed_string = [
 				'name',
 				'description'
-			);
+			];
 			foreach ( $levels as $level ) {
 				if ( ! is_object( $level ) || ! isset( $level->action_type ) ) {
 					continue;
@@ -186,7 +186,7 @@ class Controller {
 			if ( ! is_array( $options ) ) {
 				return;
 			}
-			$allowed_strings = array(
+			$allowed_strings = [
 				'wlr_point_label',
 				'wlr_point_singular_label',
 				'wlr_cart_earn_points_message',
@@ -198,7 +198,7 @@ class Controller {
 				'apply_coupon_button_text',
 				'reward_plural_label',
 				'reward_singular_label'
-			);
+			];
 			foreach ( $allowed_strings as $key ) {
 				if ( isset( $options[ $key ] ) && ! empty( $options[ $key ] ) ) {
 					$new_custom_strings[] = $options[ $key ];
@@ -215,7 +215,7 @@ class Controller {
 	 * @return void
 	 */
 	function emailStrings( &$new_custom_strings ) {
-		$allowed_strings = array(
+		$allowed_strings = [
 			'{wlr_expiry_points} {wlr_points_label} are about to expire',
 			'Redeem your hard earned {wlr_points_label} before they expire on {wlr_expiry_date}',
 			'Shop & Redeem Now',
@@ -325,7 +325,7 @@ class Controller {
 			'Your points are about to expire. Redeem now!',
 			'Sending expiry %s(%s) email failed',
 			'Expiry %s (%s) email sent successfully'
-		);
+		];
 		foreach ( $allowed_strings as $key ) {
 			$new_custom_strings[] = $key;
 		}
@@ -333,7 +333,7 @@ class Controller {
 
 
 	function getDynamicStrings( $domain ) {
-		$new_custom_strings = array();
+		$new_custom_strings = [];
 		$new_custom_strings = apply_filters( 'wlt_dynamic_string_list', $new_custom_strings, $domain );
 		if ( 'wp-loyalty-rules' === $domain ) {
 			// campaign label
@@ -358,9 +358,9 @@ class Controller {
 	}
 
 	function addWPMLCustomString() {
-		$response  = array(
+		$response  = [
 			'success' => false
-		);
+		];
 		$wlt_nonce = (string) Input::get( 'wlt_nonce', '' );
 		if ( ! Woocommerce::hasAdminPrivilege() || ! Woocommerce::verify_nonce( $wlt_nonce, 'wlt_common_nonce' ) ) {
 			$response['message'] = __( 'Security validation failed', 'wp-loyalty-translate' );
@@ -370,7 +370,7 @@ class Controller {
 			$response['message'] = __( 'WPML translation action not found', 'wp-loyalty-translate' );
 			wp_send_json( $response );
 		}
-		$domains = apply_filters( 'wlt_dynamic_string_domain', array( 'wp-loyalty-rules' ) );
+		$domains = apply_filters( 'wlt_dynamic_string_domain', [ 'wp-loyalty-rules' ] );
 		foreach ( $domains as $domain ) {
 			$new_custom_strings = $this->getDynamicStrings( $domain );
 			if ( ! empty( $new_custom_strings ) ) {
@@ -386,9 +386,9 @@ class Controller {
 
 	protected function getActivePlugins() {
 		if ( empty( self::$active_plugin_list ) ) {
-			$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins', array() ) );
+			$active_plugins = apply_filters( 'wlt_active_plugins', get_option( 'active_plugins', [] ) );
 			if ( is_multisite() ) {
-				$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+				$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', [] ) );
 			}
 			self::$active_plugin_list = $active_plugins;
 		}
@@ -412,7 +412,7 @@ class Controller {
 		if ( is_array( $plugins ) ) {
 			foreach ( $plugins as &$plugin ) {
 				if ( is_array( $plugin ) && isset( $plugin['plugin'] ) && $plugin['plugin'] == 'wp-loyalty-translate/wp-loyalty-translate.php' ) {
-					$plugin['page_url'] = admin_url( 'admin.php?' . http_build_query( array( 'page' => WLT_PLUGIN_SLUG ) ) );
+					$plugin['page_url'] = admin_url( 'admin.php?' . http_build_query( [ 'page' => WLT_PLUGIN_SLUG ] ) );
 					break;
 				}
 			}
