@@ -19,22 +19,22 @@
  * WPLoyalty Page Link: wp-loyalty-translate
  */
 defined( 'ABSPATH' ) or die;
-if ( ! function_exists( 'isWoocommerceActive' ) ) {
-	function isWoocommerceActive() {
-		$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins', array() ) );
+if ( ! function_exists( 'isWltWoocommerceActive' ) ) {
+	function isWltWoocommerceActive() {
+		$active_plugins = apply_filters( 'wlt_active_plugins', get_option( 'active_plugins', [] ) );
 		if ( is_multisite() ) {
-			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', [] ) );
 		}
 
 		return in_array( 'woocommerce/woocommerce.php', $active_plugins,
 				false ) || array_key_exists( 'woocommerce/woocommerce.php', $active_plugins );
 	}
 }
-if ( ! function_exists( 'isWployaltyActiveOrNot' ) ) {
-	function isWployaltyActiveOrNot() {
-		$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins', array() ) );
+if ( ! function_exists( 'isWltWployaltyActiveOrNot' ) ) {
+	function isWltWployaltyActiveOrNot() {
+		$active_plugins = apply_filters( 'wlt_active_plugins', get_option( 'active_plugins', [] ) );
 		if ( is_multisite() ) {
-			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', [] ) );
 		}
 
 		return in_array( 'wp-loyalty-rules/wp-loyalty-rules.php', $active_plugins,
@@ -42,12 +42,18 @@ if ( ! function_exists( 'isWployaltyActiveOrNot' ) ) {
 				false ) || in_array( 'wployalty/wp-loyalty-rules-lite.php', $active_plugins, false );
 	}
 }
-if ( ! isWoocommerceActive() || ! isWployaltyActiveOrNot() ) {
+if ( ! isWltWoocommerceActive() || ! isWltWployaltyActiveOrNot() ) {
 	return;
 }
-defined( 'WLT_PLUGIN_NAME' ) or define( 'WLT_PLUGIN_NAME', 'WPLoyalty - Multi-Lingual Compatibility - Dynamic Strings' );
+defined( 'WLT_PLUGIN_NAME' ) or define( 'WLT_PLUGIN_NAME',
+	'WPLoyalty - Multi-Lingual Compatibility - Dynamic Strings' );
 defined( 'WLT_PLUGIN_VERSION' ) or define( 'WLT_PLUGIN_VERSION', '1.0.6' );
 defined( 'WLT_PLUGIN_SLUG' ) or define( 'WLT_PLUGIN_SLUG', 'wp-loyalty-translate' );
+defined( 'WLT_MINIMUM_PHP_VERSION' ) or define( 'WLT_MINIMUM_PHP_VERSION', '7.0' );
+defined( 'WLT_MINIMUM_WP_VERSION' ) or define( 'WLT_MINIMUM_WP_VERSION', '6.0' );
+defined( 'WLT_MINIMUM_WC_VERSION' ) or define( 'WLT_MINIMUM_WC_VERSION', '6.5' );
+defined( 'WLT_MINIMUM_WLR_VERSION' ) or define( 'WLT_MINIMUM_WLR_VERSION', '1.4.3' );
+defined( 'WLT_PLUGIN_FILE' ) or define( 'WLT_PLUGIN_FILE', __FILE__ );
 defined( 'WLT_PLUGIN_URL' ) or define( 'WLT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 // Define plugin path
 defined( 'WLT_PLUGIN_PATH' ) or define( 'WLT_PLUGIN_PATH', __DIR__ . '/' );
@@ -69,7 +75,13 @@ if ( class_exists( \Wlt\App\Router::class ) ) {
 	);
 	$myUpdateChecker->getVcsApi()->enableReleaseAssets();
 	$plugin = new \Wlt\App\Router();
-	if ( method_exists( $plugin, 'initHooks' ) ) {
+	if ( method_exists( '\Wlt\App\Helpers\Plugin', 'checkDependencies' )
+	     && \Wlt\App\Helpers\Plugin::checkDependencies()
+	     && method_exists( $plugin, 'initHooks' ) ) {
 		$plugin->initHooks();
+	}
+
+	if ( class_exists( \Wlt\App\Helpers\Plugin::class ) ) {
+		\Wlt\App\Setup::init();
 	}
 }
